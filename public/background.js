@@ -26,23 +26,35 @@ const CITY_COOKIE_MAP = {
     "waterloo": "{%22Name%22:%22Waterloo%22%2C%22Latitude%22:43.4723%2C%22Longitude%22:-80.5449%2C%22ImgUrl%22:%22https://storage.googleapis.com/bamboo_site_images/city_images/waterloo.png%22%2C%22Active%22:true%2C%22_id%22:%2264b5ed600797988fa2d9d98b%22}",
 }
 
-// get config
+// Get config
 async function getConfig() {
     const storageResp = await browser.storage.local.get("config");
     return { ...DEFAULT_CONFIG, ...storageResp.config };
 };
 
-// save seen listings
+// Get saved listings
+async function getSavedListings() {
+    const storageResp = await browser.storage.local.get("savedListings");
+    return storageResp.savedListings || [];
+};
+
+// Save listings
 async function saveListings(listings) {
-    await browser.storage.local.set({ seenListings: listings });
+    await browser.storage.local.set({ savedListings: listings });
 };
 
-// load seen listings
-async function loadSavedListings() {
-    const result = await browser.storage.local.get("seenListings");
-    return result.seenListings || [];
-};
+// Get last check time
+async function getLastCheckTime() {
+    const storageResp = await browser.storage.local.get("lastCheckTime");
+    return storageResp.lastCheckTime || 0;
+}
 
+// Set last check time
+async function setLastCheckTime(time) {
+    await browser.storage.local.set({ lastCheckTime: time });
+}
+
+// Build URL with search parameters
 function buildHomepageURL(config, page = 1) {
     const params = new URLSearchParams({
         page: page,
@@ -88,6 +100,7 @@ async function fetchPageListings(config, page = 1) {
             title: l.Title,
             address: l.Address,
             price: l.Price,
+            postedDate: l.PostedDate,
         }));
 
     } catch (error) {
@@ -96,50 +109,65 @@ async function fetchPageListings(config, page = 1) {
     }
 };
 
-// scrape all new listings
-async function checkListings() {
+// Fetch all new listings since last check time
+async function fetchNewListings() {
     const config = await getConfig();
+    const lastCheckTime = await getLastCheckTime();
+    const currentCheckTime = Date.now();
     let listings = [];
 
     for (let page = 1; page <= config.pages; page++) {
         const pageListings = await fetchPageListings(config, page);
         if (pageListings.length === 0) break;
-        listings = listings.concat(pageListings);
+
+        let hasOldListings = false;
+        const newListings = pageListings.filter(l => {
+            const listingPostedTime = new Date(l.postedDate).getTime();
+            if (listingPostedTime <= lastCheckTime) {
+                hasOldListings = true;
+                return false;
+            }
+
+            return true;
+        });
+
+        listings = listings.concat(newListings);
+        if (hasOldListings) break;
     }
 
-    const prev = await loadSavedListings();
-    const newListings = listings.filter(l => !prev.some(p => p.url === l.url));
-
-    if (newListings.length > 0) {
-        await saveListings(listings);
+    if (listings.length > 0) {
+        const prev = await getSavedListings();
+        await saveListings(prev.concat(listings));
         await browser.notifications.create({
             type: "basic",
             title: "New listings found on Bamboo!",
-            message: `We found ${newListings.length} new listings matching your search on Bamboo. Check the "Notifications" tab to access each listing.`,
+            message: `We found ${listings.length} new listings matching your search on Bamboo. Check the "Notifications" tab to access each listing.`,
         });
     }
+
+    await setLastCheckTime(currentCheckTime);
 };
 
-// setup alarm listener
+// Set up alarm listener
 async function startupHandler() {
     const config = await getConfig();
+    await setLastCheckTime(Date.now());
     await browser.alarms.clear("check-listings");
     browser.alarms.create("check-listings", {
         periodInMinutes: config.pollIntervalHours * 60,
     });
 };
 
+// Alarm handler
 async function alarmHandler(alarmInfo) {
     const alarmName = alarmInfo.name;
     if (alarmName !== "check-listings") {
         console.error("Unexpected alarm name: ", alarmName);
     }
 
-    await checkListings();
+    await fetchNewListings();
 }
 
 // Attach listeners
 browser.runtime.onStartup.addListener(startupHandler);
-browser.runtime.onAlarm.addListener(alarmHandler);
-
-window.checkListings = checkListings;
+browser.alarms.onAlarm.addListener(alarmHandler);
