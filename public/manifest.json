@@ -3,8 +3,8 @@
     "name": "Bamboo Watch",
     "version": "1.0",
     "description": "Pulls new listings from bamboohousing.ca",
-    "permissions": ["notifications", "storage"],
-    "host_permissions": ["*://bamboohousing.ca/*"],
+    "permissions": ["notifications", "storage", "alarms", "cookies"],
+    "host_permissions": ["https://bamboohousing.ca/*"],
     "action": {
         "default_popup": "index.html"
     },
