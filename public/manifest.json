@@ -1,0 +1,14 @@
+{
+    "manifest_version": 3,
+    "name": "Bamboo Watch",
+    "version": "1.0",
+    "description": "Pulls new listings from bamboohousing.ca",
+    "permissions": ["notifications", "storage"],
+    "host_permissions": ["*://bamboohousing.ca/*"],
+    "action": {
+        "default_popup": "index.html"
+    },
+    "background": {
+        "scripts": ["background.js"]
+    }
+}
