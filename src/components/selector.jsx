@@ -17,7 +17,7 @@ export default function Selector({
                     onChange={(e) => onChange(e.target.value)}
                     className="w-full rounded-xl border border-[#ececec] px-4.5 py-1.25
                                placeholder:text-[#989494] focus:shadow-sm hover:shadow-sm
-                               appearance-none ease-in duration-75" 
+                               appearance-none ease-in duration-75 cursor-pointer" 
                 >
                     <option value="" disabled>{placeholder}</option>
                     {options.map((o) => (

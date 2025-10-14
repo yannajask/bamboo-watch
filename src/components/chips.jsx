@@ -29,7 +29,7 @@ export default function SelectorChips({
                             type="button"
                             onClick={() => toggleValue(o.value)}
                             className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs transition-colors duration-75 
-                                       focus:outline-none hover:shadow-sm ease-in
+                                       focus:outline-none hover:shadow-sm ease-in cursor-pointer
                                        ${toggled ? "bg-green-100" : "bg-[#ececec]"}`}
                         >
                             {o.label}
