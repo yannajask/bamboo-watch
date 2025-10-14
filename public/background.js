@@ -2,6 +2,8 @@
 const DOMAIN = 'bamboohousing.ca';
 const URL_CONTEXT = 'https://' + DOMAIN;
 const COOKIE_NAME = '__bamboo_city';
+const HOMEPAGE = '/homepage?';
+const LISTINGS = '/listings?_id=';
 
 const DEFAULT_CONFIG = {
     city: "",
@@ -66,7 +68,7 @@ function buildHomepageURL(config, page = 1) {
         Sort: "Recent",
     });
 
-    return URL_CONTEXT + '/homepage?' + params.toString().replace(/\+/g, '%20');
+    return URL_CONTEXT + HOMEPAGE + params.toString().replace(/\+/g, '%20');
 };
 
 // Fetch listings for a single page
@@ -96,7 +98,7 @@ async function fetchPageListings(config, page = 1) {
         const jsonData = JSON.parse(match[1]);
         const listings = jsonData?.props?.pageProps?.listings || [];
         return listings.map(l => ({
-            url: URL_CONTEXT + '/listings?_id=' + l._id,
+            url: URL_CONTEXT + LISTINGS + l._id,
             title: l.Title,
             address: l.Address,
             price: l.Price,
@@ -151,7 +153,6 @@ async function fetchNewListings() {
 // Set up alarm listener
 async function startupHandler() {
     const config = await getConfig();
-    await setLastCheckTime(Date.now());
     await browser.alarms.clear("check-listings");
     browser.alarms.create("check-listings", {
         periodInMinutes: config.pollIntervalHours * 60,
@@ -169,5 +170,6 @@ async function alarmHandler(alarmInfo) {
 }
 
 // Attach listeners
+browser.runtime.onInstalled.addListener(await setLastCheckTime(Date.now()));
 browser.runtime.onStartup.addListener(startupHandler);
 browser.alarms.onAlarm.addListener(alarmHandler);
