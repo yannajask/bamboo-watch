@@ -66,23 +66,25 @@ export default function App() {
 	};
 
     return (
-      	<div className="p-4 bg-white w-[284px] max-h-[522.6px] overflow-hidden">
+      	<div className="bg-white w-[284px] max-h-[522.6px] overflow-hidden">
         	<div className="flex flex-col justify-center">
-          		<div className="flex flex-row items-center justify-center gap-4 pb-4">
-					<button
-						onClick={() => setActiveTab("Notifications")}
-						className={tabButtonClasses("Notifications")}
-					>
-						Notifications
-					</button>
-					<button
-						onClick={() => setActiveTab("Settings")}
-						className={tabButtonClasses("Settings")}
-					>
-						Settings
-					</button>
-          		</div>
-          		<div className="h-px bg-[#ececec] my-1 w-full" />
+				<div className="px-4">
+					<div className="py-4 flex flex-row items-center justify-center gap-4">
+						<button
+							onClick={() => setActiveTab("Notifications")}
+							className={tabButtonClasses("Notifications")}
+						>
+							Notifications
+						</button>
+						<button
+							onClick={() => setActiveTab("Settings")}
+							className={tabButtonClasses("Settings")}
+						>
+							Settings
+						</button>
+					</div>
+					<div className="h-px bg-[#ececec] my-1 w-full" />
+				</div>
           		<div className="flex flex-col">
             		{activeTab === "Settings"
                 		? (

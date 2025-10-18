@@ -21,7 +21,7 @@ export default function SettingsPage({
     };
 
     return (
-        <div className="flex flex-col gap-4 pt-4">
+        <div className="flex flex-col gap-4 p-4">
             <Selector
                 label="CITY"
                 value={config.city}
