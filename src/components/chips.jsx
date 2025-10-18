@@ -5,7 +5,6 @@ export default function SelectorChips({
     selected,
     onChange,
     options
-
 }) {
     const toggleValue = (value) => {
         let toggled;
