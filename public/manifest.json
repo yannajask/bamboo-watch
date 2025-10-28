@@ -1,8 +1,12 @@
 {
     "manifest_version": 3,
     "name": "Bamboo Watch",
+    "developer": {
+        "name": "Yanna Jaskiewicz",
+        "url": "https://yannajask.com"
+    },
     "version": "1.0",
-    "description": "Pulls new listings from bamboohousing.ca",
+    "description": "Pulls new listings from bamboohousing.ca.",
     "permissions": ["notifications", "storage", "alarms", "cookies"],
     "host_permissions": ["https://bamboohousing.ca/*"],
     "action": {
