@@ -69,7 +69,7 @@ export default function NotificationsPage() {
     return (
         <div className="flex flex-col gap-0 overflow-y-auto max-h-[449.6px] px-4">
             {notifications.length === 0 ? (
-                <p className="pt-2 text-center text-[#989494] text-base">No new listings.</p>
+                <p className="py-4 text-center text-[#989494] text-base">No new listings.</p>
             ) : (
                 notifications.map((l) => (
                     <Notification

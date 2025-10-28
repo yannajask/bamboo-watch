@@ -30,8 +30,8 @@ export default function App() {
     // set initial state, fallback to default config if needed
     useEffect(() => {
         getConfig().then((config) => {
-            setConfig({ ...config });
-            setInitialConfig({ ...config });
+            setConfig({ ...DEFAULT_CONFIG, ...config });
+            setInitialConfig({ ...DEFAULT_CONFIG, ...config });
         })
         .catch(() => {
             setConfig({ ...DEFAULT_CONFIG });

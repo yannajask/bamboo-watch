@@ -170,6 +170,8 @@ async function alarmHandler(alarmInfo) {
 }
 
 // Attach listeners
-browser.runtime.onInstalled.addListener(await setLastCheckTime(Date.now()));
+browser.runtime.onInstalled.addListener(async () => {
+    setLastCheckTime(Date.now())
+});
 browser.runtime.onStartup.addListener(startupHandler);
 browser.alarms.onAlarm.addListener(alarmHandler);
