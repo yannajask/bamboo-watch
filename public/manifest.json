@@ -9,6 +9,14 @@
     "description": "Pulls new listings from bamboohousing.ca.",
     "permissions": ["notifications", "storage", "alarms", "cookies"],
     "host_permissions": ["https://bamboohousing.ca/*"],
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "bamboo-watch@yannajask.com",
+            "data_collection_permissions": {
+                "required": ["none"]
+            }
+        }
+    },
     "action": {
         "default_popup": "index.html"
     },
