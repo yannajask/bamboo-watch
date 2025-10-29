@@ -7,6 +7,7 @@ export default function Selector({
     options,
     placeholder = "Select"
 }) {
+    const isPlaceholder = (value === "");
     return (
         <div className="w-full">
             <p className="text-xs mb-1.5 text-[#989494] font-normal">{label}</p>
@@ -14,9 +15,9 @@ export default function Selector({
                 <select
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
-                    className="w-full rounded-xl border border-[#ececec] px-4.5 py-1.25
-                               placeholder:text-[#989494] focus:shadow-sm hover:shadow-sm
-                               appearance-none ease-in duration-75 cursor-pointer" 
+                    className={`w-full rounded-xl border border-[#ececec] px-4.5 py-1.25
+                               focus:shadow-sm hover:shadow-sm appearance-none ease-in duration-75 cursor-pointer
+                               ${isPlaceholder ? "text-[#989494]" : "text-black"}`}
                 >
                     <option value="" disabled>{placeholder}</option>
                     {options.map((o) => (

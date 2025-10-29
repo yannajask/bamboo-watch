@@ -82,9 +82,10 @@ export default function SettingsPage({
                     value={config.pollIntervalHours}
                     onChange={(e) => changeHandler("pollIntervalHours", e)}
                     options={[
-                    { value: 6, label: "6 hours" },
-                    { value: 12, label: "12 hours" },
-                    { value: 24, label: "24 hours" },
+                        { value: 3, label: "3 hours" },
+                        { value: 6, label: "6 hours" },
+                        { value: 12, label: "12 hours" },
+                        { value: 24, label: "24 hours" },
                     ]}
                     placeholder="Select Frequency"
                 />

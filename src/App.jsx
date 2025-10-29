@@ -9,7 +9,7 @@ const DEFAULT_CONFIG = {
     leaseType: [],
     price: "",
     pages: 3,
-    pollIntervalHours: 6,
+    pollIntervalHours: "",
 };
 
 async function getConfig() {
@@ -39,8 +39,10 @@ export default function App() {
         });
     }, []);
 
-    // flag if unsaved changes have been made
-    const isDirty = (JSON.stringify(config) !== JSON.stringify(initialConfig));
+    // Flag if unsaved changes have been made, or city and frequency is not set
+    const isDirty = ((JSON.stringify(config) !== JSON.stringify(initialConfig)) &&
+					 config.city !== "" &&
+					 config.pollIntervalHours !== "");
     
 	const handleConfigSave = async() => {
 		if (!isDirty) return;
@@ -50,9 +52,17 @@ export default function App() {
 		setTimeout(() => setSaved(false), 1000);
 	};
 
-    const handleConfigChange = (key, value) => {
+    const handleConfigChange = async(key, value) => {
         let newValue = value;
-        if (key === "pollIntervalHours") newValue = Number(value);
+		// Special case for changing alarm frequency
+        if (key === "pollIntervalHours") {
+			newValue = Number(value);
+			await browser.alarms.clear("check-listings");
+			browser.alarms.create("check-listings", {
+				periodInMinutes: newValue * 60,
+			});
+		};
+
 		setConfig((prev) => ({...prev, [key]: newValue }));
     };
 

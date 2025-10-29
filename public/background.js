@@ -142,6 +142,7 @@ async function fetchNewListings() {
         await saveListings(prev.concat(listings));
         await browser.notifications.create({
             type: "basic",
+            iconUrl: browser.runtime.getURL("icon64.png"),
             title: "New listings found on Bamboo!",
             message: `We found ${listings.length} new listings matching your search on Bamboo. Check the "Notifications" tab to access each listing.`,
         });
